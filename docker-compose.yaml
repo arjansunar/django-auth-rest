@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  drf-auth:
+    container_name: drf-auth
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    # syncs changes made in this dir to the container
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
