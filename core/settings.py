@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
+    # local
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -125,6 +127,10 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# using custom user model 
+AUTH_USER_MODEL = 'users.CustomUser'
+
+
 # all auth settings 
 SITE_ID = 1
 # following settings uses email for authentication instead of username
@@ -132,3 +138,32 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+
+# uses email verification
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+
+LOGIN_URL = 'https://localhost:8000/dj-rest-auth/login'
+
+# email settings 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # development settings
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = env('EMAIL_HOST_USER ')
+# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+# rest settings
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'users.serializers.CustomRegisterSerializer',
+}
+# use jwt settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    ),
+}
+
+REST_USE_JWT = True
+JWT_AUTH_COOKIE = 'dj-rest-auth'
