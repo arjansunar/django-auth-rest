@@ -17,11 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 # verify emails
 from dj_rest_auth.registration.views import VerifyEmailView, ConfirmEmailView
+# sso logins
+from sso import sso_login
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/account-confirm-email/<str:key>/',ConfirmEmailView.as_view(),),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
-    path('dj-rest-auth/account-confirm-email/', VerifyEmailView.as_view(), name='account_email_verification_sent')
+    path('dj-rest-auth/account-confirm-email/', VerifyEmailView.as_view(), name='account_email_verification_sent'),
+    # path('dj-rest-auth/facebook/', sso_login.FacebookLogin.as_view(), name='fb_login')
+    path('dj-rest-auth/google/', sso_login.GoogleLogin.as_view(), name='google_login')
 ]

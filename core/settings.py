@@ -12,7 +12,7 @@ SECRET_KEY = 'django-insecure-7(+h&ha&ak-nixebws7m48u@s%4tq$cl9=)nyhc5hd$$vmt^o9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -33,8 +33,13 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
+    # sso
+    'django.contrib.sites',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
     # local
-    'users'
+    'users',
+    'sso'
 ]
 
 MIDDLEWARE = [
@@ -167,3 +172,37 @@ REST_FRAMEWORK = {
 
 REST_USE_JWT = True
 JWT_AUTH_COOKIE = 'dj-rest-auth'
+
+# get email from sso 
+SOCIALACCOUNT_QUERY_EMAIL= True
+
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v13.0',
+    },
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
